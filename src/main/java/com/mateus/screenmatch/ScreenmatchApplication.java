@@ -12,6 +12,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static org.springframework.util.StringUtils.capitalize;
 
 @SpringBootApplication
 public class ScreenmatchApplication implements CommandLineRunner {
@@ -73,17 +76,31 @@ public class ScreenmatchApplication implements CommandLineRunner {
                 dtList.stream()
                         .map(DadosSeriado::episodios).forEach(e -> episodioLista.add(e));
                 List<DadosTemporada> episodiosFinal = new ArrayList<>();
-               for (List<DadosTemporada> da : episodioLista){
-                   for(DadosTemporada d : da){
-                       episodiosFinal.add(d);
-                   }
-               }
-
+                for (List<DadosTemporada> da : episodioLista) {
+                    for (DadosTemporada d : da) {
+                        episodiosFinal.add(d);
+                    }
+                }
 
                 System.out.println(" ");
                 System.out.println("Total de Temporadas: ");
-                System.out.println(episodiosFinal);
+                System.out.println(dtList);
                 System.out.println(" ");
+
+                System.out.println(" ");
+                Scanner scanEpisodio = new Scanner(System.in);
+                System.out.println("Coloque o título de um episódio e descubra a temporada correspondente: ");
+                String episodioEscolhido = scanEpisodio.nextLine();
+
+                System.out.println("Episódio escolhido");
+                for (DadosSeriado temporadas : dtList){
+                    for (DadosTemporada episode : temporadas.episodios()){
+                            if (episode.titulo().equalsIgnoreCase(episodioEscolhido)){
+                                System.out.println("Episodio: " + capitalize(episodioEscolhido) + " é o episódio: " + episode.episodio() + " da Temporada: " + temporadas.temporada());
+                            }
+                    }
+                }
+
 
 
                 System.out.println("Top 10 episódios de todas as temporadas: ");
@@ -93,19 +110,10 @@ public class ScreenmatchApplication implements CommandLineRunner {
                         .limit(5)
                         .forEach(System.out::println);
 
-
-                List<DadosTemporada> amostra = new ArrayList<>();
-
-                for (DadosTemporada dadosTemporada : episodiosFinal){
-                    if (!(dadosTemporada.nota().equals("N/A"))){
-                        amostra.add(dadosTemporada);
-                    }
-                }
-
-                amostra = amostra.stream().sorted().collect(Collectors.toList());
-
-
             }
+
+
+
 
             System.out.println(" ");
             Scanner scan = new Scanner(System.in);
